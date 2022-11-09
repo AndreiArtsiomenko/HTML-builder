@@ -131,7 +131,7 @@ fs.copyFile(path.join(__dirname, 'template.html'), path.join(folderProject, 'ind
 
           const component = file.name.split('.')[0];
 
-          data = data.replace(`{{${component}}}`, dataFile);
+          data = data.replaceAll(`{{${component}}}`, dataFile);
 
           fs.writeFile(path.join(folderProject, 'index.html'), data, err => {
             if (err) {
