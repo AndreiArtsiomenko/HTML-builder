@@ -1,9 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const {stdin, stdout} = process
-
-
 fs.mkdir(path.join(__dirname, 'project-dist'), { recursive: true }, (err) => {
   if (err) {
     console.error(err)
@@ -12,54 +9,6 @@ fs.mkdir(path.join(__dirname, 'project-dist'), { recursive: true }, (err) => {
 })
 
 const folderProject = path.join(__dirname, 'project-dist');
-
-fs.copyFile(path.join(__dirname, 'template.html'), path.join(folderProject, 'index.html'), err => {
-
-  if (err) {
-    console.error(err)
-    return
-  }
-
-  fs.readFile(path.join(folderProject, 'index.html'), 'utf-8', (err, data) => {
-
-    if (err) {
-      console.error(err)
-      return
-    }
-
-    const folderComponents = path.join(__dirname, 'components')
-
-    fs.readdir(path.join(__dirname, 'components'), { withFileTypes: true }, (err, files) => {
-
-      if (err) {
-        console.error(err)
-        return
-      }
-
-      files.forEach(file => {
-        fs.readFile(path.join(folderComponents, file.name), 'utf-8', (err, dataFile) => {
-          if (err) {
-            console.error(err)
-            return
-          }
-
-          const component = file.name.split('.')[0];
-
-          data = data.replace(`{{${component}}}`, dataFile);
-
-          fs.writeFile(path.join(folderProject, 'index.html'), data, err => {
-            if (err) {
-              console.error(err)
-              return
-            }
-          })
-        })
-      })
-    })
-  })
-})
-
-
 
 //------ Copy styles -----------------------------------------
 
@@ -147,3 +96,51 @@ function copyDirectory(dir, newDir) {
 }
 
 copyDirectory(assetsPath, newAssetsPath)
+
+//------ Create index.html -----------------------------------------
+
+fs.copyFile(path.join(__dirname, 'template.html'), path.join(folderProject, 'index.html'), err => {
+
+  if (err) {
+    console.error(err)
+    return
+  }
+
+  fs.readFile(path.join(folderProject, 'index.html'), 'utf-8', (err, data) => {
+
+    if (err) {
+      console.error(err)
+      return
+    }
+
+    const folderComponents = path.join(__dirname, 'components')
+
+    fs.readdir(path.join(__dirname, 'components'), { withFileTypes: true }, (err, files) => {
+
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      files.forEach(file => {
+        fs.readFile(path.join(folderComponents, file.name), 'utf-8', (err, dataFile) => {
+          if (err) {
+            console.error(err)
+            return
+          }
+
+          const component = file.name.split('.')[0];
+
+          data = data.replace(`{{${component}}}`, dataFile);
+
+          fs.writeFile(path.join(folderProject, 'index.html'), data, err => {
+            if (err) {
+              console.error(err)
+              return
+            }
+          })
+        })
+      })
+    })
+  })
+})
